@@ -44,6 +44,26 @@ func Press(tF string, v interface{}) (string, error) { //TOOD:(hopley) - handles
 	return h, nil
 }
 
+//PressPage() template File with content wrapped in header.tmpl and footer.tmpl from path.
+func PressPage(tF string, v interface{}) (string, error) {
+        //TODO:(hopley) - need a better way to get docRoot, assume heaer and footer .tmpl with tF else a default ...
+        tPath := filepath.Dir(tF)
+        log.Printf(" ~~ in PressPage() where tPath=%s\n", tPath)
+        heade := tPath + "/" + "header.tmpl" //TODO:(hopley) - press.init() check for footer, header ; some help notes ...
+        foote := tPath + "/" + "footer.tmpl"
+        c, err := Press(heade, "/head")
+        chk(err)
+        h := c
+        c, err = Press(tF, v)
+        chk(err)
+        h += c
+        c, err = Press(foote, "/login")
+        chk(err)
+        h += c
+        return h, nil
+}
+
+
 func checkFileExists(f string) error {
 	//TODO:(hopley) - func PressPage(string, interface) string {  ... }
 	_, err := os.Stat(f)
